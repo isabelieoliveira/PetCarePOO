@@ -1,106 +1,100 @@
+package petcare;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
-public abstract class Agendamento {
+public abstract class Agendamento implements Comparable<Agendamento> {
 
-    /** Horários exclusivos para animais VIP. */
-    public static final LocalTime HORARIO_VIP_MANHA = LocalTime.of(8, 0);
-    public static final LocalTime HORARIO_VIP_TARDE = LocalTime.of(17, 0);
+    protected static final BigDecimal DESCONTO_VIP = new BigDecimal("0.10"); // 10%
+    protected static final List<LocalTime> HORARIOS_EXCLUSIVOS_VIP =
+            List.of(LocalTime.of(8, 0), LocalTime.of(17, 0));
 
+    private final String id;
     private final Animal animal;
-    private final String veterinario;
+    private final String veterinarioId;
+    private final boolean vip;
     private final LocalDateTime inicio;
+    private final String prontuario;
 
-    protected Agendamento(Animal animal, String veterinario, LocalDateTime inicio) {
-        if (animal == null) throw new IllegalArgumentException("Animal é obrigatório.");
-        if (veterinario == null || veterinario.isBlank())
-            throw new IllegalArgumentException("Veterinário é obrigatório.");
-        if (inicio == null) throw new IllegalArgumentException("Data/hora é obrigatória.");
+    protected Agendamento(Animal animal, String veterinarioId, boolean vip,
+                          LocalDateTime inicio, String prontuario) {
+        if (animal == null) {
+            throw new IllegalArgumentException("O animal é obrigatório.");
+        }
+        if (veterinarioId == null || veterinarioId.isBlank()) {
+            throw new IllegalArgumentException("O veterinário é obrigatório.");
+        }
+        if (inicio == null) {
+            throw new IllegalArgumentException("A data/hora é obrigatória.");
+        }
+        if (inicio.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("O agendamento não pode ser no passado.");
+        }
+        if (!vip && HORARIOS_EXCLUSIVOS_VIP.contains(inicio.toLocalTime())) {
+            throw new IllegalArgumentException(
+                    "Os horários de 8h e 17h são exclusivos para clientes VIP.");
+        }
 
+        this.id = UUID.randomUUID().toString();
         this.animal = animal;
-        this.veterinario = veterinario;
+        this.veterinarioId = veterinarioId;
+        this.vip = vip;
         this.inicio = inicio;
-
-        validarHorarioExclusivo();
+        this.prontuario = prontuario == null ? "" : prontuario.trim();
     }
 
-    // ---------- Métodos abstratos (cada tipo define o seu) ----------
-
-    /** Duração do atendimento. */
+    // Cada tipo de agendamento define sua duração e seu valor base
     public abstract Duration getDuracao();
-
-    /** Valor antes de qualquer desconto. */
-    public abstract double getValorBase();
-
-    /** Percentual de desconto concedido a animais VIP (0.10 = 10%). */
-    protected abstract double getPercentualDescontoVip();
-
-    /** Descrição do tipo de agendamento (ex.: "Consulta"). */
+    public abstract BigDecimal getValorBase();
     public abstract String getTipo();
 
-    // ---------- Regras comuns ----------
+    public BigDecimal getValorFinal() {
+        if (vip) {
+            return getValorBase()
+                    .multiply(BigDecimal.ONE.subtract(DESCONTO_VIP))
+                    .setScale(2, RoundingMode.HALF_UP);
+        }
+        return getValorBase().setScale(2, RoundingMode.HALF_UP);
+    }
 
     public LocalDateTime getFim() {
         return inicio.plus(getDuracao());
     }
 
-    /** Valor final: aplica o desconto somente se o animal for VIP. */
-    public double getValorFinal() {
-        double valor = getValorBase();
-        if (animal.isVip()) {
-            valor -= valor * getPercentualDescontoVip();
-        }
-        return valor;
-    }
-
-    /** Prioridade de atendimento: VIP = 1 (maior), comum = 2. */
-    public int getPrioridade() {
-        return animal.isVip() ? 1 : 2;
-    }
-
-    /** Verifica se o horário de início é um dos horários exclusivos de VIP. */
-    public boolean isHorarioExclusivoVip() {
-        LocalTime hora = inicio.toLocalTime();
-        return hora.equals(HORARIO_VIP_MANHA) || hora.equals(HORARIO_VIP_TARDE);
-    }
-
-    /** Somente animais VIP podem agendar nos horários exclusivos (8h e 17h). */
-    private void validarHorarioExclusivo() {
-        if (isHorarioExclusivoVip() && !animal.isVip()) {
-            throw new IllegalStateException(
-                "Os horários de 8h e 17h são exclusivos para animais VIP.");
-        }
-    }
-
-    /** Dois agendamentos conflitam se o mesmo veterinário tem períodos sobrepostos. */
+    // Conflito na agenda do mesmo veterinário
     public boolean conflitaCom(Agendamento outro) {
-        if (!this.veterinario.equalsIgnoreCase(outro.veterinario)) return false;
+        if (!this.veterinarioId.equals(outro.veterinarioId)) {
+            return false;
+        }
         return this.inicio.isBefore(outro.getFim()) && outro.inicio.isBefore(this.getFim());
     }
 
-    /** Confere se este agendamento pode entrar na agenda existente. */
-    public void validarConflito(List<Agendamento> agenda) {
-        for (Agendamento existente : agenda) {
-            if (this.conflitaCom(existente)) {
-                throw new IllegalStateException(
-                    "Conflito na agenda do veterinário " + veterinario + " com " +
-                    existente.getTipo() + " de " + existente.inicio + " a " + existente.getFim());
-            }
-        }
+    // VIP tem prioridade (maior valor = mais prioritário)
+    public int getPrioridade() {
+        return vip ? 1 : 0;
     }
 
-    // ---------- Getters ----------
+    @Override
+    public int compareTo(Agendamento outro) {
+        int porPrioridade = Integer.compare(outro.getPrioridade(), this.getPrioridade());
+        return porPrioridade != 0 ? porPrioridade : this.inicio.compareTo(outro.inicio);
+    }
 
+    public String getId() { return id; }
     public Animal getAnimal() { return animal; }
-    public String getVeterinario() { return veterinario; }
+    public String getVeterinarioId() { return veterinarioId; }
+    public boolean isVip() { return vip; }
     public LocalDateTime getInicio() { return inicio; }
+    public String getProntuario() { return prontuario; }
 
     @Override
     public String toString() {
-        return String.format("%s | Animal: %s%s | Vet: %s | %s -> %s | Valor: R$ %.2f",
-            getTipo(), animal.getNome(), animal.isVip() ? " (VIP)" : "",
-            veterinario, inicio, getFim(), getValorFinal());
+        return getTipo() + " - " + animal.getNome() + " | " + inicio + " até " + getFim()
+                + " | R$ " + getValorFinal() + (vip ? " (VIP)" : "");
     }
 }
