@@ -43,6 +43,6 @@ private void validarDadosCadastro(
         throw new IllegalArgumentException("A data de nascimento é obrigatória.");
     }
     if (nascimento.isAfter(LocalDate.now())) {
-        throw new IllegalArguementExcepetion("A data de nascimento não pode estar no futuro.");
-    }
+        throw new IllegalArgumentExcepetion("A data de nascimento não pode estar no futuro.");
+    );
 }
