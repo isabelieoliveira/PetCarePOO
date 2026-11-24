@@ -15,9 +15,9 @@ public class CadastroService {
         Map<String, Animal> animais,
         Map<String, Proprietario> proprietarios) {
 
-        this.arquivos = Objects.requireNonNull(arquivos);
-        this.animais = Objetcs.requireNonNull(animais);
-        this.proprietarios = Objetcs.requireNonNull(proprietarios);
+        this.arquivos = Objects.requireNonNull(arquivos, "arquivos");
+        this.animais = Objetcs.requireNonNull(animais, "animais");
+        this.proprietarios = Objects.requireNonNull(proprietarios, "proprietarios");
     }
 public Animal cadastrarAnimal(
     String proprietarioId,
@@ -29,15 +29,15 @@ public Animal cadastrarAnimal(
 
     validarDadosCadastro(nome, especie, raca, nascimento);
     buscarProprietario(proprietarioId);
+    
     Animal novoAnimal = new Animal(
         UUID.randomUUID().toString(),
-        proprietarioId,
+        proprietarioId.trim(),
         nome.trim(),
         especie.trim(),
         raca.trim(),
         nascimento,
-        historico == null ? "" : historico.trim()
-        );
+        historico == null ? "" : historico.trim());
 
     arquivos.salvarAnimal(novoAnimal);
     animais.put(novoAnimal.getId(), novoAnimal);
@@ -50,7 +50,6 @@ public Animal cadastrarAnimal(
         String raca,
         LocalDate nascimento) {
         
-    
         buscarProprietario(proprietarioId);
     
     validarDadosCadastro(nome, especie, raca, nascimento);
