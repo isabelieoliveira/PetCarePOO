@@ -1,3 +1,24 @@
+package petcare;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.UUID;
+
+public class CadastroService {
+
+    private final Arquivos arquivos;
+    private final Map<String, Animal> animais;
+    private final Map<String, Proprietario> proprietarios;
+
+    public CadastroService(
+        Arquivos arquivos,
+        Map<String, Animal> animais,
+        Map<String, Proprietario> proprietarios) {
+
+        this.arquivos = Objects.requireNonNull(arquivos);
+        this.animais = Objetcs.requireNonNull(animais);
+        this.proprietarios = Objetcs.requireNonNull(proprietarios);
+    }
 public Animal cadastrarAnimal(
     String proprietarioId,
     String nome,
@@ -5,6 +26,30 @@ public Animal cadastrarAnimal(
     String raca,
     LocalDate nascimento,
     String historico) throws IOException{
+
+    validarDadosCadastro(nome, especie, raca, nascimento);
+    buscarProprietario(proprietarioId);
+    Animal novoAnimal = new Animal(
+        UUID.randomUUID().toString(),
+        proprietarioId,
+        nome.trim(),
+        especie.trim(),
+        raca.trim(),
+        nascimento,
+        historico == null ? "" : historico.trim()
+        );
+
+    arquivos.salvarAnimal(novoAnimal);
+    animais.put(novoAnimal.getId(), novoAnimal);
+
+    return novoAnimal;
+}
+    private void validarDadosCCadastro(
+        String nome,
+        String especie,
+        String raca,
+        LocalDate nascimento) {
+        
     
         buscarProprietario(proprietarioId);
     
@@ -20,10 +65,10 @@ public Animal cadastrarAnimal(
         historico == null ? "" : historico.trim()
        );
     
-       arquivos.salvarAnimal(novo);
-       animais.put(novo.getId(), novo);
+       arquivos.salvarAnimal(novoAnimal);
+       animais.put(novoAnimal.getId(), novoAnimal);
     
-       return novo;
+       return novoAnimal;
     }
 private void validarDadosCadastro(
     String nome,
@@ -41,8 +86,17 @@ private void validarDadosCadastro(
     }
     if (nascimento == null) {
         throw new IllegalArgumentException("A data de nascimento é obrigatória.");
-    }
+    } 
     if (nascimento.isAfter(LocalDate.now())) {
         throw new IllegalArgumentException("A data de nascimento não pode estar no futuro.");
+    }
+}
+    private void buscarProprietario(String proprietarioId) {
+        if (proprietarioId == null || proprietarioId.isBlank()) {
+            throw new IllegalArgumentException("O ID do proprietario é obrigatorio.");
+        }
+        if(!proprietarios.containsKey(proprietarioId)) {
+            throw  new IllegalArgumentException("Proprietario não encontrado: " + proprietarioId);
+        }
     }
 }
