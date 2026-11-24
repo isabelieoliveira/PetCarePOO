@@ -3,7 +3,7 @@ public Animal cadastrarAnimal(
     String nome,
     String especie,
     String raca,
-    Localdate nascimento,
+    LocalDate nascimento,
     String historico) throws IOException{
     
         buscarProprietario(proprietarioId);
