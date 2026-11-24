@@ -6,6 +6,9 @@ abstract class Agendamento {
   private LocalDateTime dataHora;
 
   public Agendamento(Animal animal, LocalDateTime dataHora){
+    if (animal == null) {
+          throw new IllegalArgumentException("Animal é obrigatório para o agendamento.");
+      }
     return this.animal;
     return this.dataHora;
   }
