@@ -3,12 +3,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-/**
- * Classe abstrata base para todos os agendamentos da clínica PetCare.
- *
- * Observação: assume que Animal possui getNome() e isVip().
- * Ajuste esses nomes conforme a sua classe Animal.
- */
 public abstract class Agendamento {
 
     /** Horários exclusivos para animais VIP. */
