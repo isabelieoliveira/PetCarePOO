@@ -14,7 +14,7 @@ public Animal cadastrarAnimal(
         UUID.randomUUID().toString(),
         proprietarioId,
         nome.trim(),
-        especie,
+        especie.trim(),
         raca.trim(),
         nascimento,
         historico == null ? "" : historico.trim()
@@ -43,6 +43,6 @@ private void validarDadosCadastro(
         throw new IllegalArgumentException("A data de nascimento é obrigatória.");
     }
     if (nascimento.isAfter(LocalDate.now())) {
-        throw new IllegalArguemntExcepetion("A data de nascimento não pode estar no futuro.");
+        throw new IllegalArguementExcepetion("A data de nascimento não pode estar no futuro.");
     }
 }
