@@ -30,5 +30,36 @@ public Exame(int id, String animaLId, String tipo,
   public Exame(int id, String animalId, String tipo) {
     this(id, animalId, tipo, LocalDate.now(), StatusExame.SOLICITADO, "");
 }
+
+      public double getValor() {
+        return VALOR_EXAME;
+      }
+  public void registrarColeta(){
+    if (status != StatusExame.SOLICITADO){
+      throw new IllegalStateException("A coleta só pode ser registrada em exames solicitados.");
+  }
+    status = StatusExame.COLETADO;
+  }
+public void registrarResultado(String textoResultado, String nomeProprietario, Notificador notificador) {          
+  if (status != StatusExame.COLETADO) {
+            throw new IllegalStateException("O resultado só pode ser lançado após a coleta.");
+  }
+            if (textoResultado == null || textoResultado.isBlank()) {
+              throw new IllegalArgumentException("O resultado não pode ficar vazio.");            }
+           this.resultado = textoResultado.trim();
+        this.status = StatusExame.RESULTADO_DISPONIVEL;
+        if (notificador != null) {
+            notificador.notificar(nomeProprietario,
+                "O resultado do exame \"" + tipo + "\" (animal " + animalId + ") já está disponível.");
+        }
+  }
+              
+
+    
+            
+  
+      
+
+  
   
     
