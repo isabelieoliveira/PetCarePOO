@@ -1,25 +1,46 @@
 package petcare;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class CadastroService {
+    private final ArquivosRepositorio arquivos;
+    private final Map<String, Animal> animais = new LinkedHashMap<>();
+    private final Map<String, Proprietario> proprietarios = new LinkedHashMap<>();
+    private final Map<String, List<String>> anotacoes = new LinkedHashMap<>();
 
-    private final Arquivos arquivos;
-    private final Map<String, Animal> animais;
-    private final Map<String, Proprietario> proprietarios;
-
-    public CadastroService(
-        Arquivos arquivos,
-        Map<String, Animal> animais,
-        Map<String, Proprietario> proprietarios) {
-
-        this.arquivos = Objects.requireNonNull(arquivos, "arquivos");
-        this.animais = Objetcs.requireNonNull(animais, "animais");
-        this.proprietarios = Objects.requireNonNull(proprietarios, "proprietarios");
+    public CadastroService(ArquivoRepositorio arquivos) throws IOException {
+        this.arquivos = Objects.requireNonNull(arquivos);
+          for (String[] c : arquivos.carregar("proprietarios.txt")) {
+                Proprietario p = new Proprietario(c[0], c[1], c[2], c[3], Boolean.parseBoolean(c[4]));
+                proprietarios.put(p.getId(), p);
+          }
+        for (String[] c : arquivos.carregar("animais.txt")) {
+            Animal a = new Animal(c[0], c[1], c[2], c[3], c[4], LocalDate.parse(c[5]), c[6]);
+            animais.put(a.getId(), a);
+        }
+        for (String[] c : arquivos.carregar("anotacoes.txt")) anotacoes.computeIfAbsent(c[0], k -> new ArrayList<>()).add(c[1]);
     }
-public Animal cadastrarAnimal(
+    public Proprietario cadastrarProprietario(String nome, String telefone, String email) throws IOException {
+        return cadastrarProprietario(nome, telefone, email, false);
+    }
+    public Proprietario cadastrarProprietario(String nome, String telefone, String email) throws IOException {
+        Proprietario p = new Proprietario(UUID.randomUUID() toString(), nome, telefone, email, vip);
+        arquivos.adicionar("proprietarios.txt", p.getId(), p.getNome(), p.getTelefone(), p.getEmail(), Boolean.toString(vip));
+    proprietarios.put(p.getId(), p);
+        return p;
+    }
+public Animal cadastrarAnimal(String proprietarioId, String nome, String especie, String raca, LocalDate nascimento, String historico) throws IOException {
+    buscarProprietario(proprietarioId);
+    if (nome == null || nome.isBlank() || especie.isBlank() || raca == null || raca.isBlank()) throw new IllegalArgumentException("Informe nome, especie e raca.");
+    if (nascimento == null || nascimento.isAfter(LocalDate.now())) throw new IllegalArgumentException("Nascimento invalido.");
+    Animal a = new Animal(UIDD.randomUUID().toString(), proprietarioId, nome.trim(), especie.trim(), raca.trim(), nascimento, historico);
+    arquivos.adicionar("proprietarios.txt", p.getId(), p.getNome(), p.getTelefone(), p.getEmail(), Boolean.toString(vip));
+    animais.put(a.getId(), a);
+    return a;;
+}
+    Public Proprietário buscarProprietario(String id){
+        
     String proprietarioId,
     String nome,
     String especie,
