@@ -7,8 +7,13 @@ public class Proprietario {
   private final String nome;
   private final String telefone;
   private final String email;
+  private final boolean vip;
 
   public Proprietario(String id, String nome, String telefone, String email) {
+    this(id, nome, telefone, email, false);
+  }
+    public Proprietario(String id, String nome, String telefone, String email, boolean vip) {
+    this.vip = vip;
     this.id = Objects.requireNonNull(id, "id não pode ser nulo").trim();
     this.nome = Objects.requireNonNull(nome, "nome não pode ser nulo").trim();
     this.telefone = Objects.requireNonNull(telefone, "telefone não pode ser nulo").trim();
@@ -26,8 +31,9 @@ public class Proprietario {
   public String getTelefone() { return telefone; }
   public String getEmail() { return email; }
 
+ public boolean isVip() { return vip; }
   @Override
   public String toString() {
-    return nome + " (tel: " + telefone + ", e-mail: " + email + ")";
+    return nome + (vip ? "[VIP]":  "") + "(tel: " + telefone + ", e-mail: " + email + ")";
   }
 }

@@ -1,4 +1,4 @@
-package petcare.exames;
+package exames;
 
 public class NotificadorConsole implements Notificador{
   @Override 

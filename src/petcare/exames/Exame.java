@@ -1,4 +1,4 @@
-package petcare.exames;
+package exames;
 import java.time.LocalDate;
 
 public class Exame {
