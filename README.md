@@ -87,18 +87,18 @@ PetCarePOO/
 │   ├── Proprietario.java
 │   ├── Animal.java              
 │   ├── RegistroClinico.java
-│   ├── exames/                   # Ana Clara
+│   ├── exames/                   
 │   │   ├── Exame.java
 │   │   ├── StatusExame.java
 │   │   ├── Notificador.java          # interface
 │   │   ├── NotificadorConsole.java
 │   │   ├── ExameRepositorio.java     # leitura e gravação dos exames em CSV
 │   │   └── ExameService.java         # regras de exames
-│   ├── consultas/                #  Laila (a implementar)
+│   ├── consultas/               
 │   ├── vacinacao/               
 │   │   ├── Vacina.java
 │   │   └── CalendarioVacinacao.java
-│   └── pagamentos/               #  Ávylla (a implementar)
+│   └── pagamentos/               
 ├── docs/
 │   └── relatorio.pdf
 ├── README.md
