@@ -1,3 +1,5 @@
+package petcare.pagamentos;
+
 public class PlanoBasico extends Plano{
   public PlanoBasico(){ super("Basico", 90.00); }
 
