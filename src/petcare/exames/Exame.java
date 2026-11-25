@@ -1,21 +1,20 @@
-package petcare.axmmes;
-
+package petcare.exames;
 import java.time.LocalDate;
 
 public class Exame {
   public static final double VALOR_EXAME = 60.00;
 
 private final int id;
-  private final String animaLId;
+private final String animalId;
   private final String tipo;
   private final LocalDate dataSolicitacao;
   private StatusExame status;
   private String resultado;
 
-public Exame(int id, String animaLId, String tipo,
-            LocalDate dataSolicitacao, StatusExame status, String resultado){
-  if (animalId == null || animalIdis.Blank()){
-    throw new IllegalArgumentException("O exame precisa estar ligado a um animal.");
+public Exame(int id, String animalId, String tipo,
+             LocalDate dataSolicitacao, StatusExame status, String resultado){
+if (animalId == null || animalId.isBlank()){
+  throw new IllegalArgumentException("O exame precisa estar ligado a um animal.");
   }
   if (tipo == null || tipo.isBlank()){
     throw new IllegalArgumentException("Informe o tipo do exame.");
@@ -53,6 +52,19 @@ public void registrarResultado(String textoResultado, String nomeProprietario, N
                 "O resultado do exame \"" + tipo + "\" (animal " + animalId + ") já está disponível.");
         }
   }
+  public int getId() { return id;}
+  public String getAnimalId() { return animalId; }
+  public String getTipo() { return tipo; }
+  public LocalDate getDataSolicitacao() { return dataSolicitacao; }
+  public StatusExame getStatus() { return status; }
+  public String getResultado() { return resultado; }
+  
+  @Override
+  public String toString(){
+    return String.format("Exame #%d | %s | animal: %s | %s | %s | R$ %.2f ",
+      id, tipo, animalId, dataSolicitacao, status.getDescricao(), getValor());  }
+}
+
               
 
     
