@@ -14,6 +14,7 @@ public abstract class Plano{
     }
     if (!Double.isFinite(mensalidade) || mensalidade < 0) {
       throw new IllegalArgumentException("mensalidade deve ser um número finito não negativo");
+    }
     this.mensalidade = mensalidade;
   }
 
@@ -24,7 +25,7 @@ public abstract class Plano{
   public abstract int getVacinasIncluidas();
 
   @Override
-  public String toSring(){
+  public String toString(){
     return nome;
   }
   
