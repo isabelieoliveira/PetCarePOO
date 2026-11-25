@@ -13,7 +13,7 @@ Sistema em **Java** (Programação Orientada a Objetos), executado no console, p
 | **Laila Lopes Arnaud Sampaio ** | Consultas e cirurgias (agenda, prontuário, prioridade VIP) |
 | **Ana Clara Cunha dos Santos** | Controle de exames e laboratório |
 | **Ávylla da Silva Veras ** | Pagamentos, descontos para VIPs e planos de assinatura |
-| **Bianca Oliveira** | Vacinação, lembretes e certificado de vacinação |
+| **Bianca Gabriela Martins de Oliveira** | Vacinação, lembretes e certificado de vacinação |
 
 ---
 
