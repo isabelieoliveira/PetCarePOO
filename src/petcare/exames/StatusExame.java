@@ -3,7 +3,7 @@ package petcare.exames;
 public enum StatusExame{
   SOLICITADO ("Solicitado"),
   COLETADO("Coletado"),
-  RESUlTADO_DISPONIVEL("Resultado disponível");
+  RESULTADO_DISPONIVEL("Resultado disponível");
 
   private final String descricao;
 
