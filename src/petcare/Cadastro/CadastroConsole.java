@@ -139,34 +139,17 @@ public class CadastroConsole {
         System.out.println("Resultado registrado.");
     }
 
+    /** Monta o registro clínico usando a classe RegistroClinico e exibe o resumo. */
     private void verRegistro() throws IOException {
         Animal animal = escolherAnimal();
-        String nomeDono = cadastro.buscarProprietario(animal.getProprietarioId()).getNome();
+        Proprietario dono = cadastro.buscarProprietario(animal.getProprietarioId());
+        List<Exame> exames = exameService.listarPorAnimal(animal.getId());
+        List<String> notas = cadastro.listarAnotacoes(animal.getId());
+
+        RegistroClinico registro = new RegistroClinico(animal, dono, exames, notas);
 
         System.out.println();
-        System.out.println("=== Registro clínico: " + animal + " ===");
-        System.out.println("Proprietário: " + nomeDono);
-        if (!animal.getHistorico().isBlank()) {
-            System.out.println("Histórico: " + animal.getHistorico());
-        }
-
-        List<Exame> exames = exameService.listarPorAnimal(animal.getId());
-        System.out.println("Exames:");
-        if (exames.isEmpty()) {
-            System.out.println("  (nenhum)");
-        }
-        for (Exame e : exames) {
-            System.out.println("  - " + e);
-        }
-
-        List<String> notas = cadastro.listarAnotacoes(animal.getId());
-        System.out.println("Anotações:");
-        if (notas.isEmpty()) {
-            System.out.println("  (nenhuma)");
-        }
-        for (String n : notas) {
-            System.out.println("  - " + n);
-        }
+        System.out.println(registro.resumo());
     }
 
     private void adicionarAnotacao() throws IOException {
