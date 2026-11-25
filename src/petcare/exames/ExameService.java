@@ -1,11 +1,11 @@
 package petcare.exames;
 
-import java.util.ArraysList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExameService{
-  private final List<Exame> exmes;
-  private final ExameRepositorio repositrio;
+  private final List<Exame> exames;
+  private final ExameRepositorio repositorio;
   private final Notificador notificador;
 
 public ExameService(ExameRepositorio repositorio, Notificador notificador){
@@ -13,8 +13,8 @@ public ExameService(ExameRepositorio repositorio, Notificador notificador){
   this.notificador = notificador;
   this.exames = repositorio.carregar();
 }
-  public Exme solicitar(StringanimalId, String tipo){
-    Exame novo = new Exame (ProximolId(), animalId, tipo);
+  public Exame solicitar(String animalId, String tipo){
+    Exame novo = new Exame(proximoId(), animalId, tipo);
     exames.add(novo);
     repositorio.salvar(exames);
     return novo;
@@ -25,6 +25,7 @@ public ExameService(ExameRepositorio repositorio, Notificador notificador){
   }
   public void lancarResultado(int id, String resultado, String nomeProprietario){
     buscarPorId(id).registrarResultado(resultado, nomeProprietario, notificador);
+    repositorio.salvar(exames);
   }
    public List<Exame> listarTodos() {
         return new ArrayList<>(exames);
@@ -40,7 +41,7 @@ public ExameService(ExameRepositorio repositorio, Notificador notificador){
    }
   public Exame buscarPorId(int id){
     for (Exame e : exames){
-      if(egetId() ==id ){
+      if(e.getId() ==id ){
         return e;
       }
     }
