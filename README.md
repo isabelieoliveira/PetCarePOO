@@ -67,7 +67,7 @@ Sistema em **Java** (Programação Orientada a Objetos), executado no console, p
 | Marcação de proprietário VIP | A implementar |
 | Consultas e cirurgias (agenda, conflito, horários VIP) | 
 | Vacinação, lembretes de 15 dias e certificado | 
-| Exames: status e notificação ao proprietário (R$ 60,00) |
+| Exames: status e notificação ao proprietário (R$ 60,00) | ✅ Implementado |
 | Pagamentos com 15% de desconto VIP | 
 | Planos de assinatura Básico e Completo |
 
@@ -83,16 +83,17 @@ PetCarePOO/
 │   ├── Main.java                 # ponto de entrada
 │   ├── CadastroConsole.java      # menu e leitura de dados
 │   ├── CadastroService.java      # proprietários, animais e anotações
-│   ├── ExameService.java         # regras de exames
 │   ├── ArquivoRepositorio.java   # leitura e gravação em arquivos
 │   ├── Proprietario.java
 │   ├── Animal.java              
 │   ├── RegistroClinico.java
-│   ├── exames/                   
+│   ├── exames/                   # Ana Clara
 │   │   ├── Exame.java
 │   │   ├── StatusExame.java
 │   │   ├── Notificador.java          # interface
-│   │   └── NotificadorConsole.java
+│   │   ├── NotificadorConsole.java
+│   │   ├── ExameRepositorio.java     # leitura e gravação dos exames em CSV
+│   │   └── ExameService.java         # regras de exames
 │   ├── consultas/                #  Laila (a implementar)
 │   ├── vacinacao/               
 │   │   ├── Vacina.java
@@ -103,6 +104,7 @@ PetCarePOO/
 ├── README.md
 └── .gitignore
 ```
+
 
 **Ponto de integração entre módulos:** a informação de proprietário **VIP** é definida no cadastro (Isabelle) e usada pelos horários prioritários (Laila) e pelo desconto de 15% (Ávylla).
 
