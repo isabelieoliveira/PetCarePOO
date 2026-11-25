@@ -55,7 +55,7 @@ public CadastroConsole(CadastroService cadastro, ExameService exameService) {
 private void executar(String opcao) throws IOException {
   switch (opcao) {
     case "1": cadastrarProprietario(); break;
-    case "2": cadastrarAnimal(); breabk;
+    case "2": cadastrarAnimal(); break;
     case "3": listar(); break;
     case "4": solicitarExame(); break;
     case "5" : registrarColeta(); break; 
@@ -68,8 +68,8 @@ private void executar(String opcao) throws IOException {
   private void cadastrarProprietario() throws IOException {
     String nome = ler("Nome: ");
     String telefone = ler("Telefone: ");
-    String emial = ler("E-mail: ");
-    Proprietario p = cadastro.cadastrarProprietario (nome, telefone, emial);
+    String email = ler("E-mail: ");
+    Proprietario p = cadastro.cadastrarProprietario (nome, telefone, email);
     System.out.ptintln("Proprietario cadastrado: " + p.getNome());
   }
   private void cadastrarAnimal() throws IOException {
@@ -82,7 +82,7 @@ private void executar(String opcao) throws IOException {
     System.out.println("Animal cadastrado: " + a);
   }
   private void listar() {
-    List<Proprietario. donos = cadastro.listarProprietarios();
+    List<Proprietario.donos = cadastro.listarProprietarios();
     if (donos.isEmpty()) {
       System.out.println("Nenhum proprietário cadastrado.");
       return;
@@ -90,7 +90,7 @@ private void executar(String opcao) throws IOException {
     for (Proprietario p : donos) {
       System.out.println("* " + p);
       for (Animal a : cadastro.listarAnimalDoProprietario(p.getId())) {
-        System.out.println("    - " + a);
+        System.out.println("  - " + a);
       }
     }
   }
