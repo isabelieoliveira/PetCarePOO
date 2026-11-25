@@ -6,7 +6,7 @@ public class Assitura{
   private int vacinasUsadas;
 
   public Assinatura(Plano plano){
-    if(plano == null){
+    if (plano == null){
       throw new IllegalArgumentException("O plano não pode ser nulo.");
     }
     this.plano = plano;
@@ -16,12 +16,29 @@ public class Assitura{
     return plano;
   }
 
-  public int consultasRestantes(){
+  public int getConsultasRestantes(){
     return plano.getConsultasIncluidas() - consultasUsadas();
   }
 
-  public int vacinasRestantes(){
+  public int getVacinasRestantes(){
     return plano.getVacinasIncluidas() - vacinasUsadas();
+  }
+
+  public boolean consumir(String tipo){
+    if (TipoServico.CONSULTA.equals(tipo) && getConsultasRestantes > 0){
+      consultasUsadas++;
+      return true;
+    }
+    if (TipoServico.VACINA.equals(tipo) && getVacinasRestantes > 0){
+      vacinasUsaadas++;
+      return true;
+    }
+    return false;
+  }
+
+  public void novoCiclo(){
+    consutasUsadas = 0;
+    vacinasUsadas = 0;
   }
 
 }
