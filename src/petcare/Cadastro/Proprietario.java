@@ -1,4 +1,4 @@
-package petcare;
+package Cadastro;
 
 import java.util.Objects;
 

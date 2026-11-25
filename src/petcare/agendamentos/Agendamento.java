@@ -1,5 +1,4 @@
-package petcare;
-
+package agendamentos;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
@@ -7,6 +6,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
+
+import Cadastro.Animal;
 
 public abstract class Agendamento implements Comparable<Agendamento> {
 

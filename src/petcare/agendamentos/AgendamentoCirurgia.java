@@ -1,4 +1,5 @@
-package petcare;
+package agendamentos;
+import Cadastro.Animal;
 
 import java.math.BigDecimal;
 import java.time.Duration;
