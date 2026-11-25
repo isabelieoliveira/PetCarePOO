@@ -21,5 +21,5 @@ public LocalDate getValidade() { return validade; }
 
 public boolean venceEm(int dias, LocalDate hoje) {
   return !validade.isBefore(hoje) && !validade.isAfter(hoje.plusDays(dias));
-}
+   }
 }
