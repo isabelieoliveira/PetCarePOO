@@ -7,7 +7,7 @@ public class Proprietario {
   private final String nome;
   private final String telefone;
   private final String email;
-  private final noolean vip;
+  private final boolean vip;
 
   public Proprietario(String id, String nome, String telefone, String email) {
     this(id, nome, telefone, email, false);
