@@ -94,7 +94,9 @@ PetCarePOO/
 │   │   ├── Notificador.java          # interface
 │   │   └── NotificadorConsole.java
 │   ├── consultas/                #  Laila (a implementar)
-│   ├── vacinacao/                # Bianca (a implementar)
+│   ├── vacinacao/                # Bianca
+│   │   ├── Vacina.java
+│   │   └── CalendarioVacinacao.java
 │   └── pagamentos/               #  Ávylla (a implementar)
 ├── docs/
 │   └── relatorio.pdf
