@@ -1,6 +1,7 @@
 package petcare;
 
 import petcare.exames.Exame;
+import petcare.exames.ExameService;
 
 import java.io.IOException;
 import java.time.LocalData;
@@ -33,6 +34,8 @@ public CadastroConsole(CadastroService cadastro, ExameService exameService) {
       try { executar(opcao);
           } catch (IllegalArgumentException | IllegalStateException e) {
         System.out.println("Erro: "+ e.getMessage());
+      } catch (CancelamentoException e){
+        return;
       } catch (IOExceptioon e) {
         System.out.println("Entrada encerrada.");
         return;
