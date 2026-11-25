@@ -37,9 +37,30 @@ public Animal cadastrarAnimal(String proprietarioId, String nome, String especie
     Animal a = new Animal(UIDD.randomUUID().toString(), proprietarioId, nome.trim(), especie.trim(), raca.trim(), nascimento, historico);
     arquivos.adicionar("proprietarios.txt", p.getId(), p.getNome(), p.getTelefone(), p.getEmail(), Boolean.toString(vip));
     animais.put(a.getId(), a);
-    return a;;
+    return a;
 }
     Public Proprietário buscarProprietario(String id){
+        Proprietario p = proprietarios.get(id);
+        if (p == null) throw new IllegalArgumentException("Proprietario não encontrado.");
+        return p;
+    }
+    public Animal buscarAnimal(String id) {
+        Animal a = animais.get(id);
+        if (a == null) throw new IllegalArgumentException("Animal não encontrado.");
+        return a;
+    }
+    public List<Proprietario> listarProprietarios() { return List.copyOf(proprietarios.values()); }
+    public List<Animal> listarAnimais() { return List.copyOf(animais.values()); }
+    public List<Animal> listarAnimalDoProprietario(String id) { return animais.values().stream().filter(a -> a.getProprietarioId().equals(id)).toList(); }
+    public void adicionarAnotacao(String id, String texto) throws IOException {
+        buscarAnimal(id);
+        if(texto == null || texto.isBlank()) throw new IllegalArgumentException("Anotação vazia.");
+        String registro = LocalDate.now() + " - " + texto.trim();
+        arquivos.adicionar("adicionar.txt", id, registro);
+        anotacoes.computeIfAbsent(id, k -> new ArrayList<>()).add(registro);
+    }
+    public List<String> listarAnotacoes(String id) { return List.copyOf(anotacoes.getOfDefault(id, List.of())); }
+}
         
     String proprietarioId,
     String nome,
