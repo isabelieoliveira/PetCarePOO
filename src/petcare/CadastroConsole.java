@@ -12,6 +12,10 @@ import agendamentos.AgendamentoConsulta;
 import exames.Exame;
 import exames.ExameService;
 
+import pagamentos.Cobravel;
+import pagamentos.Pagador;
+import pagamentos.ServicoPagamento;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -76,6 +80,7 @@ public class CadastroConsole {
         System.out.println("10 - Agendar cirurgia");
         System.out.println("11 - Listar agendamentos");
         System.out.println("12 - Cancelar agendamento");
+        System.out.println("13 - Cobrar Serviço");
         System.out.println("0 - Sair");
     }
 
@@ -93,6 +98,7 @@ public class CadastroConsole {
             case "10" -> agendarCirurgia();
             case "11" -> listarAgendamentos();
             case "12" -> cancelarAgendamento();
+            case "13" -> cobrarServico();
             default -> System.out.println("Opção inválida.");
         }
     }
@@ -345,5 +351,44 @@ public class CadastroConsole {
 
     private static class CancelamentoException extends RuntimeException {
         private static final long serialVersionUID = 1L;
+    }
+
+    private void cobrarServico(){
+        Proprietario dono = escolherProprietario();
+
+        System.out.println("1 - Consulta (R$ 120,00)");
+        System.out.println("2 - Vacina (R$ 80,00)");
+        System.out.println("3 - Exame (60,00)");
+
+        int opcao = lerIndice("Servico:", 3);
+        String tipo;
+        double valor;
+
+        switch (opcao){
+            case -> 0 {tipo = "Consulta"; valor = 120.00;}
+            case -> 1 {tipo = "Vacina"; valor = 80.00;}
+            default -> {tipo = "Exame"; valor = 60.00;}
+        }
+
+        Pagador pagador = new Pagador(){
+            public String getNome(){ return nome; }
+            public double getIsVip(){ return dono.isVip; }
+            public String pagamentos.Assinatura getAssinaturas(){ return null; }
+        };
+
+        Cobravel servico = new Cobravel(){
+            public String getTipo(){ return tipo; }
+            public double getValaor(){ return valor; }
+            public String getDescricao(){ return descricao; }
+        };
+
+        Pagamento pagamento = ServicoPagamento.cobrar(pagador, List.of(servico));
+        System.out.println(pagamento);
+
+        if (lerSimNao("Confirmar pagamento? (s/n):")){
+           pagamento.pagar();
+           System.out.println("Pagamento confirmado.");
+        }
+        
     }
 }
