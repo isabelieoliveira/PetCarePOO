@@ -3,16 +3,16 @@
 Sistema em **Java** (Programação Orientada a Objetos), executado no console, para a clínica veterinária **PetCare**, que oferece **consultas, cirurgias, vacinação e exames laboratoriais**. O sistema gerencia agendamentos, cadastro de animais, histórico e saúde. Donos de animais **VIP** recebem descontos e atendimento prioritário.
 
 > **Disciplina:** POO
-> **Professor: Samuel
+> **Professor**: Samuel
 
 ##  Equipe e responsabilidades
 
 | Integrante | Módulo |
 |---|---|
 | **Isabelle Luiza Rodrigues de Oliveira** | Cadastro de animais e proprietários, histórico de saúde |
-| **Laila Lopes Arnaud Sampaio ** | Consultas e cirurgias (agenda, prontuário, prioridade VIP) |
+| **Laila Lopes Arnaud Sampaio** | Consultas e cirurgias (agenda, prontuário, prioridade VIP) |
 | **Ana Clara Cunha dos Santos** | Controle de exames e laboratório |
-| **Ávylla da Silva Veras ** | Pagamentos, descontos para VIPs e planos de assinatura |
+| **Ávylla da Silva Veras** | Pagamentos, descontos para VIPs e planos de assinatura |
 | **Bianca Gabriela Martins de Oliveira** | Vacinação, lembretes e certificado de vacinação |
 
 ---
@@ -64,10 +64,10 @@ Sistema em **Java** (Programação Orientada a Objetos), executado no console, p
 | Cadastro de proprietários e animais (espécie, idade, histórico de saúde) |
 | Registro clínico com anotações e exames do animal | 
 | Histórico de visitas e tratamentos | 
-| Marcação de proprietário VIP | A implementar |
+| Marcação de proprietário VIP |
 | Consultas e cirurgias (agenda, conflito, horários VIP) | 
 | Vacinação, lembretes de 15 dias e certificado | 
-| Exames: status e notificação ao proprietário (R$ 60,00) | ✅ Implementado |
+| Exames: status e notificação ao proprietário (R$ 60,00) |
 | Pagamentos com 15% de desconto VIP | 
 | Planos de assinatura Básico e Completo |
 
@@ -115,7 +115,7 @@ PetCarePOO/
 - **Encapsulamento:** atributos privados, com validação nos construtores e nos serviços
 - **Interface e polimorfismo:** `Notificador` e `NotificadorConsole`
 - **Enum com comportamento:** `StatusExame`
-- **Composição:** `RegistroClinico` reúne animal, proprietário, exames e anotações
+- **Agregação:** `RegistroClinico` reúne animal, proprietário, exames e anotações
 - **Separação de responsabilidades:** modelo, serviços, persistência e interface
 
 
