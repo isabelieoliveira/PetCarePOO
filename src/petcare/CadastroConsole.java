@@ -14,6 +14,7 @@ import exames.ExameService;
 
 import pagamentos.Cobravel;
 import pagamentos.Pagador;
+import pagamentos.Pagamento;
 import pagamentos.ServicoPagamento;
 
 import java.io.IOException;
