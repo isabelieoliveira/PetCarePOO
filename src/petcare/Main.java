@@ -1,5 +1,4 @@
 import Cadastro.ArquivosRepositorio;
-import Cadastro.CadastroConsole;
 import Cadastro.CadastroService;
 import exames.ExameRepositorio;
 import exames.ExameService;

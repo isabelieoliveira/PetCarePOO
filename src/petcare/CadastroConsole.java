@@ -1,32 +1,44 @@
-package Cadastro;
+// sem linha "package"
+
+import Cadastro.Animal;
+import Cadastro.CadastroService;
+import Cadastro.Proprietario;
+import Cadastro.RegistroClinico;
+
+import agendamentos.Agendamento;
+import agendamentos.AgendamentoCirurgia;
+import agendamentos.AgendamentoConsulta;
 
 import exames.Exame;
 import exames.ExameService;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-/** Interface de texto (menu) do sistema. */
 public class CadastroConsole {
 
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATO_DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private final CadastroService cadastro;
     private final ExameService exameService;
     private final Scanner entrada = new Scanner(System.in);
 
+    /** Agendamentos (consultas e cirurgias) mantidos em memória durante a execução. */
+    private final List<Agendamento> agendamentos = new ArrayList<>();
+
     public CadastroConsole(CadastroService cadastro, ExameService exameService) {
         this.cadastro = cadastro;
         this.exameService = exameService;
     }
-
-    // ------------------------------------------------------------------
-    // Laço principal
-    // ------------------------------------------------------------------
 
     public void iniciar() {
         System.out.println("========== PetCare ==========");
@@ -60,6 +72,10 @@ public class CadastroConsole {
         System.out.println("6 - Lançar resultado de exame");
         System.out.println("7 - Ver registro clínico");
         System.out.println("8 - Adicionar anotação clínica");
+        System.out.println("9 - Agendar consulta");
+        System.out.println("10 - Agendar cirurgia");
+        System.out.println("11 - Listar agendamentos");
+        System.out.println("12 - Cancelar agendamento");
         System.out.println("0 - Sair");
     }
 
@@ -73,13 +89,13 @@ public class CadastroConsole {
             case "6" -> lancarResultado();
             case "7" -> verRegistro();
             case "8" -> adicionarAnotacao();
+            case "9" -> agendarConsulta();
+            case "10" -> agendarCirurgia();
+            case "11" -> listarAgendamentos();
+            case "12" -> cancelarAgendamento();
             default -> System.out.println("Opção inválida.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Ações do menu
-    // ------------------------------------------------------------------
 
     private void cadastrarProprietario() throws IOException {
         String nome = ler("Nome: ");
@@ -160,8 +176,74 @@ public class CadastroConsole {
     }
 
     // ------------------------------------------------------------------
-    // Seleção por número
+    // Agendamentos (consulta e cirurgia)
     // ------------------------------------------------------------------
+
+    private void agendarConsulta() {
+        Animal animal = escolherAnimal();
+        boolean vip = donoEhVip(animal);
+        String veterinarioId = ler("Veterinário (identificação): ");
+        LocalDateTime inicio = lerDataHora("Data e hora (dd/MM/aaaa HH:mm): ");
+        String prontuario = ler("Prontuário/observações (opcional): ");
+
+        Agendamento novo = new AgendamentoConsulta(animal, veterinarioId, vip, inicio, prontuario);
+        registrarAgendamento(novo);
+    }
+
+    private void agendarCirurgia() {
+        Animal animal = escolherAnimal();
+        boolean vip = donoEhVip(animal);
+        String veterinarioId = ler("Veterinário (identificação): ");
+        LocalDateTime inicio = lerDataHora("Data e hora (dd/MM/aaaa HH:mm): ");
+        String prontuario = ler("Prontuário/observações (opcional): ");
+        BigDecimal valor = lerValor("Valor da cirurgia (R$): ");
+
+        Agendamento novo = new AgendamentoCirurgia(animal, veterinarioId, vip, inicio, prontuario, valor);
+        registrarAgendamento(novo);
+    }
+
+    /** Verifica conflito na agenda do veterinário e, se estiver livre, guarda o agendamento. */
+    private void registrarAgendamento(Agendamento novo) {
+        for (Agendamento existente : agendamentos) {
+            if (novo.conflitaCom(existente)) {
+                throw new IllegalStateException("Conflito de horário com: " + existente);
+            }
+        }
+        agendamentos.add(novo);
+        System.out.println("Agendamento realizado: " + novo);
+    }
+
+    /** Lista os agendamentos por prioridade (VIP primeiro) e depois por horário. */
+    private void listarAgendamentos() {
+        if (agendamentos.isEmpty()) {
+            System.out.println("Nenhum agendamento cadastrado.");
+            return;
+        }
+        List<Agendamento> ordenados = new ArrayList<>(agendamentos);
+        Collections.sort(ordenados);
+        for (int i = 0; i < ordenados.size(); i++) {
+            Agendamento a = ordenados.get(i);
+            System.out.println((i + 1) + " - " + a + " | vet: " + a.getVeterinarioId());
+        }
+    }
+
+    private void cancelarAgendamento() {
+        if (agendamentos.isEmpty()) {
+            throw new IllegalStateException("Não há agendamentos para cancelar.");
+        }
+        List<Agendamento> ordenados = new ArrayList<>(agendamentos);
+        Collections.sort(ordenados);
+        for (int i = 0; i < ordenados.size(); i++) {
+            System.out.println((i + 1) + " - " + ordenados.get(i));
+        }
+        Agendamento escolhido = ordenados.get(lerIndice("Agendamento: ", ordenados.size()));
+        agendamentos.remove(escolhido);
+        System.out.println("Agendamento cancelado.");
+    }
+
+    private boolean donoEhVip(Animal animal) {
+        return cadastro.buscarProprietario(animal.getProprietarioId()).isVip();
+    }
 
     private Proprietario escolherProprietario() {
         List<Proprietario> lista = cadastro.listarProprietarios();
@@ -202,10 +284,6 @@ public class CadastroConsole {
         return lista.get(lerIndice("Exame: ", lista.size()));
     }
 
-    // ------------------------------------------------------------------
-    // Leitura de entrada
-    // ------------------------------------------------------------------
-
     private int lerIndice(String rotulo, int tamanho) {
         String texto = ler(rotulo);
         try {
@@ -225,6 +303,24 @@ public class CadastroConsole {
             return LocalDate.parse(texto.trim(), FORMATO_DATA);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Data inválida. Use o formato dd/MM/aaaa.");
+        }
+    }
+
+    private LocalDateTime lerDataHora(String rotulo) {
+        String texto = ler(rotulo);
+        try {
+            return LocalDateTime.parse(texto.trim(), FORMATO_DATA_HORA);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Data/hora inválida. Use o formato dd/MM/aaaa HH:mm.");
+        }
+    }
+
+    private BigDecimal lerValor(String rotulo) {
+        String texto = ler(rotulo).trim().replace(",", ".");
+        try {
+            return new BigDecimal(texto);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Valor inválido. Exemplo: 850,00");
         }
     }
 
