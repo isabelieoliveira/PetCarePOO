@@ -364,16 +364,17 @@ public class CadastroConsole {
         int opcao = lerIndice("Servico:", 3);
         String tipo;
         double valor;
+        String descricao;
 
         switch (opcao){
-            case 0 -> {tipo = "Consulta"; valor = 120.00;}
-            case 1 -> {tipo = "Vacina"; valor = 80.00;}
-            default -> {tipo = "Exame"; valor = 60.00;}
+            case 0 -> {tipo = "Consulta"; valor = 120.00; descricao = "Consulta veterinária";}
+            case 1 -> {tipo = "Vacina";   valor = 80.00;  descricao = "Aplicação de vacina";}
+            default -> {tipo = "Exame";   valor = 60.00;  descricao = "Exame clínico";}
         }
-
+        
         Pagador pagador = new Pagador(){
-            public String getNome(){ return nome; }
-            public double getIsVip(){ return dono.isVip; }
+            public String getNome(){ return dono.getNome(); }
+            public boolean isVip(){ return dono.isVip(); }
             public pagamentos.Assinatura getAssinaturas(){ return null; }
         };
 
