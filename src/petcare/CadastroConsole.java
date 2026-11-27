@@ -366,20 +366,20 @@ public class CadastroConsole {
         double valor;
 
         switch (opcao){
-            case -> 0 {tipo = "Consulta"; valor = 120.00;}
-            case -> 1 {tipo = "Vacina"; valor = 80.00;}
+            case 0 -> {tipo = "Consulta"; valor = 120.00;}
+            case 1 -> {tipo = "Vacina"; valor = 80.00;}
             default -> {tipo = "Exame"; valor = 60.00;}
         }
 
         Pagador pagador = new Pagador(){
             public String getNome(){ return nome; }
             public double getIsVip(){ return dono.isVip; }
-            public String pagamentos.Assinatura getAssinaturas(){ return null; }
+            public pagamentos.Assinatura getAssinaturas(){ return null; }
         };
 
         Cobravel servico = new Cobravel(){
             public String getTipo(){ return tipo; }
-            public double getValaor(){ return valor; }
+            public double getValor(){ return valor; }
             public String getDescricao(){ return descricao; }
         };
 
